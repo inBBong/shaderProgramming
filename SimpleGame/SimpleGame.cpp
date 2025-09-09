@@ -88,3 +88,32 @@ int main(int argc, char **argv)
     return 0;
 }
 
+/*
+프로그램의 **진입점(main 함수)**이 있는 파일.
+
+GLUT 초기화:
+
+glutInit, glutInitDisplayMode, glutInitWindowSize, glutCreateWindow로 500x500 윈도우를 생성.
+
+GLEW 초기화: OpenGL 3.0 지원 여부 확인.
+
+Renderer 객체(g_Renderer)를 생성 → 실제 렌더링을 담당.
+
+이벤트 함수 등록:
+
+glutDisplayFunc(RenderScene)
+
+glutIdleFunc(Idle)
+
+glutKeyboardFunc(KeyInput)
+
+glutMouseFunc(MouseInput)
+
+glutSpecialFunc(SpecialKeyInput)
+
+RenderScene(): 화면을 지우고(glClear) g_Renderer->DrawTest() 호출 → 삼각형 하나 그림.
+
+이벤트 입력(Key/Mouse/Special Key)이 들어와도 결국 RenderScene()만 호출 → 지금은 단순히 다시 그리기만 함.
+
+정리: GLUT + GLEW 초기화, Renderer를 불러서 그리는 틀 역할.
+*/

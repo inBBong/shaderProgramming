@@ -35,3 +35,22 @@ private:
 	GLuint m_SolidRectShader = 0;
 };
 
+/*렌더링을 담당하는 Renderer 클래스 정의.
+
+주요 기능:
+
+Initialize() : 셰이더 로드, VBO 생성
+
+DrawSolidRect() : 사각형을 화면에 그림
+
+DrawTest() : 테스트용 삼각형 그림
+
+CompileShaders() : 버텍스/프래그먼트 셰이더 컴파일 & 링크
+
+ReadFile() : 셰이더 소스 파일 읽기
+
+AddShader() : 개별 셰이더 attach
+
+CreateVertexBufferObjects() : VBO 생성 (사각형, 삼각형)
+
+GetGLPosition() : 윈도우 좌표 → OpenGL 좌표 변환*/

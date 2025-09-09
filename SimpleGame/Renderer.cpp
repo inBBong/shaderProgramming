@@ -229,3 +229,41 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 	*newX = x * 2.f / m_WindowSizeX;
 	*newY = y * 2.f / m_WindowSizeY;
 }
+
+/*초기화 (Initialize)
+
+윈도우 크기 저장
+
+셰이더 프로그램 컴파일 (SolidRect.vs, SolidRect.fs)
+
+VBO(Rectangle, Test 삼각형) 생성
+
+성공 여부 확인 후 m_Initialized = true
+
+VBO 생성 (CreateVertexBufferObjects)
+
+사각형: 두 개의 삼각형으로 정의.
+
+삼각형 (Test용): (0,0,0), (1,0,0), (1,1,0)
+
+셰이더 관련
+
+ReadFile : 텍스트 파일 읽기
+
+AddShader : 셰이더 소스를 OpenGL 객체에 attach
+
+CompileShaders : 버텍스 & 프래그먼트 셰이더를 로드, attach, 링크 후 프로그램 반환
+
+렌더링
+
+DrawSolidRect(x, y, z, size, r,g,b,a)
+
+좌표 변환, 색상/변환값 uniform으로 전달
+
+m_VBORect 바인딩 후 그리기
+
+DrawTest()
+
+m_VBOTestRect 삼각형 바인딩 후 그리기
+
+현재 SimpleGame.cpp에서 이 함수만 호출됨 → 삼각형 하나 그려줌*/
