@@ -18,9 +18,12 @@ public:
 	void DrawTest();
 	void DrawParticle();
 
+	void ReloadAllShaderPrograms();
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	bool ReadFile(char* filename, std::string *target);
+	void CompileAllShaderPrograms();
+	void DeleteAllShaderPrograms();
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects();
