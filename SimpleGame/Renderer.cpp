@@ -304,6 +304,9 @@ void Renderer::DrawTest()
 
 void Renderer::DrawParticle()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	m_Time += 0.016;
 
 	//Program select
@@ -313,7 +316,10 @@ void Renderer::DrawParticle()
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_Time);
 
-	int stride = 12;
+	int uForceLoc = glGetUniformLocation(shader, "u_Force");
+	glUniform3f(uForceLoc, std::sin(m_Time) * 10.f, 0, 0);
+
+	int stride = 14;
 	int attribPosition = glGetAttribLocation(shader, "a_Position");//x,y,z
 	glEnableVertexAttribArray(attribPosition);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticles);
@@ -349,14 +355,33 @@ void Renderer::DrawParticle()
 		3, GL_FLOAT,
 		GL_FALSE, sizeof(float) * stride,
 		(GLvoid*)(sizeof(float) * 9));
+	int aLifeTimeLoc = glGetAttribLocation(shader, "a_LifeTime");
+	glEnableVertexAttribArray(aLifeTimeLoc);
+	glVertexAttribPointer(aLifeTimeLoc,
+		1, GL_FLOAT,
+		GL_FALSE, sizeof(float) * stride,
+		(GLvoid*)(sizeof(float) * 12));
+
+	int aMassLoc = glGetAttribLocation(shader, "a_Mass");
+	glEnableVertexAttribArray(aMassLoc);
+	glVertexAttribPointer(aMassLoc,
+		1, GL_FLOAT,
+		GL_FALSE, sizeof(float) * stride,
+		(GLvoid*)(sizeof(float) * 13));
+
+
 
 	glDrawArrays(GL_TRIANGLES, 0, m_VBOParticlesVertexCount);
 
 	glDisableVertexAttribArray(attribPosition);
 	glDisableVertexAttribArray(aValueLoc);
 	glDisableVertexAttribArray(aColorLoc);
+	glDisableVertexAttribArray(aLifeTimeLoc);
+	glDisableVertexAttribArray(aMassLoc); 
+
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_BLEND);
 }
 
 
@@ -370,7 +395,7 @@ void Renderer::CreateParticles(int Count)
 {
 	int particleCounts = Count; //파티클 개수 
 	int verticesCount = particleCounts * 6;//버텍스 개수
-	int floatCountsPerVertex = 3 + 1 + 4 + 1 + 3;//array에서 Index를 계산하기 위함 x,y,z,value,r,g,b,a, startTime, vx, vy, vz
+	int floatCountsPerVertex = 3 + 1 + 4 + 1 + 3 + 1 + 1;//array에서 Index를 계산하기 위함 x,y,z,value,r,g,b,a, startTime, vx, vy, vz, LifeTime, mass
 	int totalfloatCounts = floatCountsPerVertex * verticesCount; //버텍스당 필요한 정보의 수
 	int floatCountsPerParticle = floatCountsPerVertex* 6;
 
@@ -379,17 +404,21 @@ void Renderer::CreateParticles(int Count)
 	for (int i = 0; i < particleCounts; i++)
 	{
 		float size = 0.01 * (float)rand() / (float)RAND_MAX;
-		float centerX = 0;//((float)rand() / (float)RAND_MAX)* 2.f-1.f;
-		float centerY = 0;//((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		float value = 1;
+		float centerX = ((float)rand() / (float)RAND_MAX)* 2.f-1.f;
+		float centerY = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		float value = (float)rand() / (float)RAND_MAX;
 		float r= ((float)rand() / (float)RAND_MAX);
 		float g= ((float)rand() / (float)RAND_MAX);
 		float b= ((float)rand() / (float)RAND_MAX);
-		float a= ((float)rand() / (float)RAND_MAX);
+		float a = ((float)rand() / (float)RAND_MAX);
 		float sTime = ((float)rand() / (float)RAND_MAX) * 2.f;
-		float vx = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		float vy = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		float vz = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		float vx = 0.f;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		float vy = 0.f;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		float vz = 0.f;//((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+
+		float LifeTime = ((float)rand() / (float)RAND_MAX);
+
+		float mass = (((float)rand() / (float)RAND_MAX)) + 1.f;
 
 		int Index = i * floatCountsPerParticle;
 		temp[Index] = centerX - size; Index++;//x
@@ -404,7 +433,8 @@ void Renderer::CreateParticles(int Count)
 		temp[Index] = vx; Index++;//vx
 		temp[Index] = vy; Index++;//vy
 		temp[Index] = vz; Index++;//vz
-
+		temp[Index] = LifeTime; Index++;
+		temp[Index] = mass; Index++;
 
 		temp[Index] = centerX + size; Index++;
 		temp[Index] = centerY + size; Index++;
@@ -418,6 +448,8 @@ void Renderer::CreateParticles(int Count)
 		temp[Index] = vx; Index++;//vx
 		temp[Index] = vy; Index++;//vy
 		temp[Index] = vz; Index++;//vz
+		temp[Index] = LifeTime; Index++;
+		temp[Index] = mass; Index++;
 
 		temp[Index] = centerX - size; Index++;
 		temp[Index] = centerY + size; Index++;
@@ -431,6 +463,8 @@ void Renderer::CreateParticles(int Count)
 		temp[Index] = vx; Index++;//vx
 		temp[Index] = vy; Index++;//vy
 		temp[Index] = vz; Index++;//vz
+		temp[Index] = LifeTime; Index++;
+		temp[Index] = mass; Index++;
 
 		temp[Index] = centerX - size; Index++;
 		temp[Index] = centerY - size; Index++;
@@ -444,6 +478,8 @@ void Renderer::CreateParticles(int Count)
 		temp[Index] = vx; Index++;//vx
 		temp[Index] = vy; Index++;//vy
 		temp[Index] = vz; Index++;//vz
+		temp[Index] = LifeTime; Index++;
+		temp[Index] = mass; Index++;
 
 		temp[Index] = centerX + size; Index++;
 		temp[Index] = centerY - size; Index++;
@@ -457,6 +493,8 @@ void Renderer::CreateParticles(int Count)
 		temp[Index] = vx; Index++;//vx
 		temp[Index] = vy; Index++;//vy
 		temp[Index] = vz; Index++;//vz
+		temp[Index] = LifeTime; Index++;
+		temp[Index] = mass; Index++;
 
 		temp[Index] = centerX + size; Index++;
 		temp[Index] = centerY + size; Index++;
@@ -470,6 +508,8 @@ void Renderer::CreateParticles(int Count)
 		temp[Index] = vx; Index++;//vx
 		temp[Index] = vy; Index++;//vy
 		temp[Index] = vz; Index++;//vz
+		temp[Index] = LifeTime; Index++;
+		temp[Index] = mass; Index++;
 
 	}
 
