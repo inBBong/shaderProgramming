@@ -99,6 +99,15 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(testColor), testColor, GL_STATIC_DRAW);
 
+	float fullRect[]
+		=
+	{
+		-1,-1,0,1,1,0,-1,1,0,
+		-1,-1,0,1,-1,0,1,1,0,
+	};
+	glGenBuffers(1, &m_FullScreenVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_FullScreenVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(fullRect), fullRect, GL_STATIC_DRAW);
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -171,6 +180,8 @@ void Renderer::CompileAllShaderPrograms()
 		"./Shaders/Particle.fs");
 	m_GridMeshShader = CompileShaders("./Shaders/GridMesh.vs",
 		"./Shaders/GridMesh.fs");
+	m_FullScreenShader = CompileShaders("./Shaders/FullScreen.vs",
+		"./Shaders/FullScreen.fs");
 
 }
 
@@ -415,6 +426,28 @@ void Renderer::DrawGridMesh()
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, m_GridMeshVertexCount);
+
+	glDisableVertexAttribArray(attribPosition);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::DrawFullScreenColor(float r, float g, float b, float a)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	int shader = m_FullScreenShader;
+	glUseProgram(shader);
+	
+	glUniform4f(glGetUniformLocation(shader, "u_Color"), r, g, b, a);
+
+	int attribPosition = glGetAttribLocation(shader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+	glBindBuffer(GL_ARRAY_BUFFER, m_FullScreenVBO);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(attribPosition);
 

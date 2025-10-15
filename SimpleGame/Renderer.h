@@ -18,7 +18,7 @@ public:
 	void DrawTest();
 	void DrawParticle();
 	void DrawGridMesh();
-
+	void DrawFullScreenColor(float r, float g, float b, float a);
 	void ReloadAllShaderPrograms();
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -41,6 +41,7 @@ private:
 	GLuint m_VBOTest2Rect = 0;
 	GLuint m_VBOTestColor = 0;
 	GLuint m_GridMeshVBO = 0;
+	GLuint m_FullScreenVBO = 0;
 	
 	GLuint m_SolidRectShader = 0;
 	GLuint m_TestShader = 0;
@@ -51,6 +52,7 @@ private:
 	GLuint m_VBOParticlesVertexCount = 0;
 	GLuint m_ParticleShader = 0;
 	GLuint m_GridMeshShader = 0;
+	GLuint m_FullScreenShader = 0;
 };
 
 /*렌더링을 담당하는 Renderer 클래스 정의.
