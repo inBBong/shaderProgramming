@@ -7,6 +7,8 @@
 
 #include "Dependencies\glew.h"
 
+#define MAX_COUNTS 500
+
 class Renderer
 {
 public:
@@ -53,6 +55,10 @@ private:
 	GLuint m_ParticleShader = 0;
 	GLuint m_GridMeshShader = 0;
 	GLuint m_FullScreenShader = 0;
+
+	//rain drop
+	float m_Points[MAX_COUNTS * 4];
+	int m_DropCount = 500;
 };
 
 /*렌더링을 담당하는 Renderer 클래스 정의.

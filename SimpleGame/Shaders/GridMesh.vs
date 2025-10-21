@@ -1,5 +1,5 @@
 #version 330
-
+#define MAX_POINTS 500
 in vec3 a_Position;
 in vec4 a_Color;
 
@@ -8,7 +8,15 @@ out vec4 v_Color;
 uniform float u_Time; 
 //-0.5~0.5
 //0~2PI
+uniform vec4 u_Points[MAX_POINTS];
+uniform int u_DropCount;
+
 const float c_PI = 3.141592;
+/*const vec4 c_Points[3] = vec4[](vec4(0,0,2,2),
+                                vec4(0.5 ,0 ,3 ,3),
+                                vec4(-0.5 ,0 ,4 ,4));*/
+
+
 void Flag()
 {
     vec4 newPosition = vec4(a_Position, 1);
@@ -54,9 +62,43 @@ void Wave()
 
 }
 
+void RainDrop()
+{
+  vec4 newPosition = vec4(a_Position, 1);
+    gl_Position = newPosition;
+
+   vec2 pos = a_Position.xy;
+   float newColor =0;
+   for(int i=0;i<u_DropCount;i++)
+   {
+   vec2 cen = u_Points[i].xy;   
+   float sTime = u_Points[i].z;
+   float lTime =u_Points[i].w;
+   float newTime =u_Time-sTime;
+      if(newTime>0)
+      {
+        float baseTime =fract(newTime/lTime);
+        float oneMinus =1-baseTime;
+        float t=baseTime*lTime;
+        float range =baseTime*lTime/10;
+        float d = distance(pos,cen);
+        float value = sin(10 * d * 4 * c_PI- t*10);//상수의 의미 잘 알아두기
+        float p = 30*clamp(range-d, 0, 1);
+
+        newColor +=value*p*oneMinus;
+      }
+   }
+    v_Color = vec4(newColor);
+    
+   
+    
+    //v_Color = vec4(ceil(clamp(0.5-d, 0, 1)));
+
+}
 void main()
 {	
     //Flag();
-    Wave();
+    //Wave();
+    RainDrop();
 
 }
