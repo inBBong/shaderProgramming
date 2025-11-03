@@ -22,7 +22,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	
 	//Create VBOs
 	CreateVertexBufferObjects();
-	CreateParticles(1000);
+	CreateParticles(10000);
 	CreateGridMesh(1000, 1000);
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -84,12 +84,12 @@ void Renderer::CreateVertexBufferObjects()
 		(1 - center)* size,(1 - center)* size,0, 0.5,
 		(0 - center)* size,(1 - center)* size,0, 0.5,  //Quad2
 	};	
-
+	
 	glGenBuffers(1, &m_VBOTestRect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestRect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(testPos), testPos, GL_STATIC_DRAW);
 	
-
+	
 	float testColor[]
 		=
 	{
@@ -106,11 +106,11 @@ void Renderer::CreateVertexBufferObjects()
 		0.f,1.f,0.f,1.f,
 		0.f,0.f,1.f,1.f,
 	};
-
+	
 	glGenBuffers(1, &m_VBOTestColor);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(testColor), testColor, GL_STATIC_DRAW);
-
+	
 	float fullRect[]
 		=
 	{
@@ -201,6 +201,8 @@ void Renderer::DeleteAllShaderPrograms()
 {
 	glDeleteShader(m_SolidRectShader);
 	glDeleteShader(m_TestShader);
+	glDeleteShader(m_GridMeshShader);
+	glDeleteShader(m_GridMeshShader);
 	glDeleteShader(m_ParticleShader);
 }
 
@@ -288,7 +290,7 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 void Renderer::DrawTest()
 {
-	m_Time += 0.016;
+	m_Time += 0.0016;
 	
 	//Program select
 	glUseProgram(m_TestShader);	
@@ -500,14 +502,14 @@ void Renderer::CreateParticles(int Count)
 		float b= ((float)rand() / (float)RAND_MAX);
 		float a = ((float)rand() / (float)RAND_MAX);
 		float sTime = ((float)rand() / (float)RAND_MAX) * 2.f;
-		float vx = 0.f;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		float vy = 0.f;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		float vz = 0.f;//((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		float vx = /*0.f;*/ (((float)rand() / (float)RAND_MAX) * 2.f - 1.f)*5;
+		float vy = /*0.f;*/ ((float)rand() / (float)RAND_MAX) * 5;
+		float vz = 0.f;
 
-		float LifeTime = ((float)rand() / (float)RAND_MAX);
+		float LifeTime = ((float)rand() / (float)RAND_MAX)*1.5f;
 
-		float mass = (((float)rand() / (float)RAND_MAX)) + 1.f;
-		float period = (((float)rand() / (float)RAND_MAX)) + 1.f;
+		float mass = (((float)rand() / (float)RAND_MAX)) * 1.f + 1.f;
+		float period = (((float)rand() / (float)RAND_MAX));
 
 		int Index = i * floatCountsPerParticle;
 		temp[Index] = centerX - size; Index++;//x

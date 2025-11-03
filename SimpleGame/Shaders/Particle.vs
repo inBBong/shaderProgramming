@@ -1,4 +1,4 @@
-﻿#version 330
+#version 330
 
 in vec3 a_Position;
 in float a_Value;
@@ -7,7 +7,7 @@ in float a_STime;
 in vec3 a_Vel;
 in float a_LifeTime;
 in float a_Mass;
-in float a_Period;
+in float a_Period;  
 
 out vec4 v_Color;
 
@@ -23,13 +23,13 @@ void raining()
    float newAlpha = 1.0;
    vec4 newPosition = vec4(a_Position, 1);
    float newTime = u_Time - a_STime;
-
+    
    if(newTime > 0){
       float t = fract(newTime / lifeTime) * lifeTime;     // t: 0 ~ lifeTime
       float tt = t * t;
 
-      float forceX = u_Force.x + c_G.x + a_Mass;
-      float forceY = u_Force.y + c_G.y + a_Mass;
+      float forceX = u_Force.x*2 + c_G.x*a_Mass;
+      float forceY = u_Force.y*2 + c_G.y*a_Mass;
 
       float aX = forceX / a_Mass;
       float aY = forceY / a_Mass;
@@ -51,7 +51,43 @@ void raining()
    vec4 newColor = a_Color;
    v_Color = vec4(a_Color.rgb, newAlpha);
 }
+void sinParticleAecong()
+{
+   vec4 centerColor = vec4(1, 0, 0, 1);
+   vec4 borderColor = vec4(1, 1, 1, 1);
+   vec4 newColor = a_Color;
+   vec4 newPosition = vec4(a_Position, 1);
+   float newAlpha = 1;
 
+   float newTime = u_Time - a_STime;
+   float lifeTime = a_LifeTime;
+   float amp = a_Value * 2 - 1; // 폭
+   amp*=0.5;
+   float period = a_Period * 3;
+
+   if(newTime > 0)
+   {
+      float t = fract(newTime/lifeTime) * lifeTime;
+      float tt = t * t;
+      float nTime = t/lifeTime; // 시간에 따른 스케일 값
+
+      float x = nTime * 4 - 1; // -1~3
+      float y = sin(c_PI*nTime) * amp * sin(period*c_PI*nTime*2);
+
+      newPosition.xy += vec2(x,y);
+      newAlpha = 1-t/lifeTime;
+
+      float d = abs(y);
+      newColor = mix(centerColor, borderColor, d * 2);
+   }
+   else
+   {
+      newPosition.xy += vec2(-100000, 0);
+   }   
+
+   gl_Position = newPosition;
+   v_Color = vec4(newColor.rgb, newAlpha);
+}
 void sinParticle()
 {
    vec4 newPosition = vec4(a_Position, 1);
@@ -68,10 +104,10 @@ void sinParticle()
 
    if(newTime > 0)
    {
-      float period = a_Period * 3.f;
+      float period = a_Period * 3.0;
 
       float x = 2 * t - 1;
-      float y = sin(2 * t * c_PI * period) * (a_Value - 0.5) * 2.f * t;    //폭
+      float y = sin(2 * t * c_PI * period) * (a_Value - 0.5) * 2.0 * t;    //폭
       y *= sin(fract(newTime/lifeTime) * c_PI);
 
       newPosition.xy += vec2(x,y);
@@ -131,5 +167,6 @@ void main()
 {
     //raining();
    //sinParticle();
-   circleParticle();
+   //sinParticleAecong();
+  circleParticle();
 }

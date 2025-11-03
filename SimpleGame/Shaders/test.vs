@@ -15,7 +15,8 @@ void main()
 	float x = radius*cos(rad);
 	float y = radius*sin(rad);
 	vec4 newPosition = vec4(a_Position,1);
-	newPosition.xy=newPosition.xy +(value+1)*vec2( x,y);
+	//newPosition.xy=newPosition.xy +(value+1)*vec2( x,y);
+	newPosition.xy=newPosition.xy +vec2( x,y);
 	gl_Position = newPosition;
 
 	v_Color = a_Color;
