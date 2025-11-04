@@ -346,7 +346,7 @@ void Renderer::DrawParticle()
 	int uForceLoc = glGetUniformLocation(shader, "u_Force");
 
 	glUniform1f(uTimeLoc, m_Time);
-	glUniform3f(uForceLoc, std::sin(m_Time) * 10.f, 0, 0);
+	glUniform3f(uForceLoc, std::sin(m_Time) * 10.f, 0, 0);//-10~10
 
 	int stride = 15;
 
@@ -493,23 +493,23 @@ void Renderer::CreateParticles(int Count)
 	temp = new float[totalfloatCounts];
 	for (int i = 0; i < particleCounts; i++)
 	{
-		float size = 0.01 * (float)rand() / (float)RAND_MAX;
+		float size = 0.01 * (float)rand() / (float)RAND_MAX;//0.001~0.01
 		float centerX = 0;//((float)rand() / (float)RAND_MAX)* 2.f-1.f;
 		float centerY = 0;//((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		float value = (float)rand() / (float)RAND_MAX;
-		float r= ((float)rand() / (float)RAND_MAX);
-		float g= ((float)rand() / (float)RAND_MAX);
-		float b= ((float)rand() / (float)RAND_MAX);
-		float a = ((float)rand() / (float)RAND_MAX);
-		float sTime = ((float)rand() / (float)RAND_MAX) * 2.f;
-		float vx = /*0.f;*/ (((float)rand() / (float)RAND_MAX) * 2.f - 1.f)*5;
-		float vy = /*0.f;*/ ((float)rand() / (float)RAND_MAX) * 5;
+		float value = (float)rand() / (float)RAND_MAX;//0~1
+		float r= ((float)rand() / (float)RAND_MAX);//0~1
+		float g= ((float)rand() / (float)RAND_MAX);//0~1
+		float b= ((float)rand() / (float)RAND_MAX);//0~1
+		float a = ((float)rand() / (float)RAND_MAX);//0~1
+		float sTime = ((float)rand() / (float)RAND_MAX) * 2.f;//0~2
+		float vx = /*0.f;*/ (((float)rand() / (float)RAND_MAX) * 2.f - 1.f)*5;//-5~5
+		float vy = /*0.f;*/ ((float)rand() / (float)RAND_MAX) * 5;//0~5
 		float vz = 0.f;
 
-		float LifeTime = ((float)rand() / (float)RAND_MAX)*1.5f;
+		float LifeTime = ((float)rand() / (float)RAND_MAX)*1.5f;    //0~1.5
 
-		float mass = (((float)rand() / (float)RAND_MAX)) * 1.f + 1.f;
-		float period = (((float)rand() / (float)RAND_MAX));
+		float mass = (((float)rand() / (float)RAND_MAX)) * 1.f + 1.f; //1~2
+		float period = (((float)rand() / (float)RAND_MAX));				//0~1
 
 		int Index = i * floatCountsPerParticle;
 		temp[Index] = centerX - size; Index++;//x

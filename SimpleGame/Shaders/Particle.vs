@@ -1,7 +1,7 @@
 #version 330
 
 in vec3 a_Position;
-in float a_Value;
+in float a_Value; //0~1
 in vec4 a_Color;
 in float a_STime;
 in vec3 a_Vel;
@@ -135,9 +135,7 @@ void circleParticle()
    float lifeTime = a_LifeTime;
    float t = fract(newTime/lifeTime) * lifeTime;
    float tt = t * t;
-
-   vec4 centerC = vec4(1, 0, 0, 1);
-   vec4 borderC = vec4(1, 1, 1, 0);
+   
    vec4 newColor = a_Color;
    float newAlpha = 1.0;
 

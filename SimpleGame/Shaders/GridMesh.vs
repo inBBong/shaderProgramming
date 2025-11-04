@@ -18,12 +18,12 @@ const float c_PI = 3.141592;
 
 
 void Flag()
-{
-    vec4 newPosition = vec4(a_Position, 1);
-    float value = (a_Position.x + 0.5) * 2 * c_PI;
+{        //a_Position  -> -0.5~0.5  a_Position  ->  -1~1
+    vec4 newPosition = vec4(a_Position*0.5, 1);
+    float value = (a_Position.x*0.5 + 0.5) * 2 * c_PI; // 0~2PI
     float dx = 0;
     float dy = 0.1 * sin(value + u_Time) * value / c_PI;
-    float tri = (-1 * a_Position.x) + 0.5; //1~0
+    float tri = (-1 * a_Position.x*0.5) + 0.5; //1~0
     newPosition.xy *= vec2(1, tri);
     newPosition.xy += vec2(dx, dy);
 
@@ -71,22 +71,22 @@ void RainDrop()
    float newColor =0;
    for(int i=0;i<u_DropCount;i++)
    {
-   vec2 cen = u_Points[i].xy;   
-   float sTime = u_Points[i].z;
-   float lTime =u_Points[i].w;
-   float newTime =u_Time-sTime;
-      if(newTime>0)
-      {
-        float baseTime =fract(newTime/lTime);
-        float oneMinus =1-baseTime;
-        float t=baseTime*lTime;
-        float range =baseTime*lTime/10;
-        float d = distance(pos,cen);
-        float value = sin(10 * d * 4 * c_PI- t*10);//상수의 의미 잘 알아두기
-        float p = 30*clamp(range-d, 0, 1);
+        vec2 cen = u_Points[i].xy;   
+        float sTime = u_Points[i].z;
+        float lTime =u_Points[i].w;
+        float newTime =u_Time-sTime;
+        if(newTime>0)
+        {
+            float baseTime =fract(newTime/lTime);
+            float oneMinus =1-baseTime;
+            float t=baseTime*lTime;
+            float range =baseTime*lTime/10;
+            float d = distance(pos,cen);
+            float value = sin(10 * d * 4 * c_PI- t*10);//상수의 의미 잘 알아두기
+            float p = 30*clamp(range-d, 0, 1);
 
-        newColor +=value*p*oneMinus;
-      }
+            newColor +=value*p*oneMinus;
+        }
    }
     v_Color = vec4(newColor);
     
@@ -97,8 +97,8 @@ void RainDrop()
 }
 void main()
 {	
-    Flag();
+    //Flag();
     //Wave();
-    //RainDrop();
+    RainDrop();
 
 }
