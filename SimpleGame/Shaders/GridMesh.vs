@@ -95,10 +95,33 @@ void RainDrop()
     //v_Color = vec4(ceil(clamp(0.5-d, 0, 1)));
 
 }
+void Q4()
+{
+ vec4 newPosition = vec4(a_Position*0.5, 1);
+    float value = 2*(newPosition.y+0.5)*c_PI; // 0~2PI
+    float greyScale =sin(value*8);
+    gl_Position = newPosition;
+    v_Color=vec4(greyScale);
+	
+}
+void Q5()
+{
+
+ vec4 newPosition = vec4(a_Position*0.5, 1);
+    float valueX = 2*(newPosition.x+0.5)*c_PI; // 0~2PI
+    float valueY = 2*(newPosition.y+0.5)*c_PI; // 0~2PI
+    //float greyScale =sin(valueX*8);
+    float greyScale =ceil(sin(valueY*8+u_Time));
+    //greyScale *=sin(valueY*8);
+    gl_Position = newPosition;
+    v_Color=vec4(greyScale);
+ 
+}
 void main()
 {	
     //Flag();
     //Wave();
-    RainDrop();
+    //RainDrop();
+    Q5();
 
 }

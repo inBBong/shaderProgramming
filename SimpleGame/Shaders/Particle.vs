@@ -160,11 +160,35 @@ void circleParticle()
 
    v_Color = vec4(newColor.rgb, newAlpha);
 }
+void Q1()
+{
+vec4 newPosition = vec4(a_Position, 1);
+float value = a_Value*c_PI*2;
+float dx = 2*(a_Value-0.5);
+float dy = 0.5*sin(a_Value-u_Time);
+newPosition.xy+=vec2(dx,dy);
+gl_Position =newPosition;
+v_Color = vec4(a_Color.rgb,1);
 
+}
+void Q3() //나선환
+{
+vec4 newPosition = vec4(a_Position,1);
+
+float value = a_Value * c_PI * 2;
+float dx = a_Value*sin(value*4-u_Time);
+float dy = a_Value*cos(value*4-u_Time);
+newPosition.xy +=vec2(dx,dy);
+
+gl_Position = newPosition;
+v_Color = vec4(a_Color.rgb,1);
+
+}
 void main()
 {
     //raining();
    //sinParticle();
    //sinParticleAecong();
-  circleParticle();
+  //circleParticle();
+  Q3();
 }
