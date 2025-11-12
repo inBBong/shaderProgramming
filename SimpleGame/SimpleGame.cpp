@@ -35,7 +35,8 @@ void RenderScene(void)
 	//g_Renderer->DrawTest();
 	//g_Renderer->DrawFullScreenColor(0,0,1,0.2);
 	//g_Renderer->DrawParticle();
-	g_Renderer->DrawGridMesh();
+	//g_Renderer->DrawGridMesh();
+	g_Renderer->DrawFS();
 
 	glutSwapBuffers();
 }
