@@ -2,7 +2,7 @@
 #define MAX_POINTS 500
 in vec3 a_Position;
 in vec4 a_Color;
-
+out vec2 v_UV;
 
 out vec4 v_Color;
 uniform float u_Time; 
@@ -34,6 +34,9 @@ void Flag()
         v_Color = vec4(1, 1, 0, 1);
     else
         v_Color = vec4(1 + dy * 5);
+
+
+        v_UV = vec2(a_Position.x*0.5+0.5,0.5 -a_Position.y*0.5);
 }
 void Wave()
 {
@@ -119,9 +122,9 @@ void Q5()
 }
 void main()
 {	
-    //Flag();
+    Flag();
     //Wave();
     //RainDrop();
-    Q5();
+    //Q5();
 
 }

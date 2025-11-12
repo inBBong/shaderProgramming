@@ -4,8 +4,10 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <cassert>
 
 #include "Dependencies\glew.h"
+#include"LoadPng.h"
 
 #define MAX_COUNTS 500
 
@@ -23,6 +25,7 @@ public:
 	void DrawFullScreenColor(float r, float g, float b, float a);
 	void DrawFS();
 	void ReloadAllShaderPrograms();
+	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	bool ReadFile(char* filename, std::string *target);
@@ -59,6 +62,8 @@ private:
 
 	GLuint m_FSVBO = 0;
 	GLuint m_FSShader = 0;
+	GLuint m_RGBTexture = 0;
+	GLuint m_UsagiTexture = 0;
 
 	//rain drop
 	float m_Points[MAX_COUNTS * 4];
