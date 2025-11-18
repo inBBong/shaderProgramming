@@ -474,7 +474,8 @@ void Renderer::DrawGridMesh()
 	int shader = m_GridMeshShader;
 	int uSampler = glGetUniformLocation(shader, "u_Texture");
 	glUniform1i(uSampler, 0);
-	glBindTexture(GL_TEXTURE_2D, m_UsagiTexture);
+	//glBindTexture(GL_TEXTURE_2D, m_UsagiTexture);
+	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
 	//Program select
 	glUseProgram(shader);
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
@@ -533,7 +534,8 @@ void Renderer::DrawFS()
 	int uSampler = glGetUniformLocation(shader, "u_RGBTexture");
 	glUniform1i(uSampler, 0);
 
-	glBindTexture(GL_TEXTURE_2D, m_UsagiTexture);
+	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+	//glBindTexture(GL_TEXTURE_2D, m_UsagiTexture);
 
 	int attribPosition = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
